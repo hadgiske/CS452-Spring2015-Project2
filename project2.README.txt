@@ -1,3 +1,9 @@
-name, date, description
+Katie Hadgis & Luke Shaw, 4/26/2015
 
-be sure to include complete details of how to interact with your application
+Use a,w,s,d to control diamond object and avoid boxes.
+Hitting the boxes causes a game over. Click the New Game button that appears to restart the game.
+Player recieves 5 points per half second with a maximum of three minutes game play.
+Surviving the full three minutes constitutes a win for the player. The game ends and clicking the New Game button that appears restarts the game.
+
+Flying boxes move in the 3 dimensions. The player moves in 2 dimensions. 
+Objects cast shadow on ground plane which is displayed as a type of texture.

@@ -63,7 +63,7 @@ var FSHADER_SOURCE =
   '}\n';
 
 var OFFSCREEN_WIDTH = 2048, OFFSCREEN_HEIGHT = 2048;
-var LIGHT_X = 0, LIGHT_Y = 3, LIGHT_Z = -.25; // Position of the light source
+var LIGHT_X = 0, LIGHT_Y = 5, LIGHT_Z = 0; // Position of the light source
 
 window.onload = function main() {
   // Retrieve <canvas> element
@@ -119,7 +119,7 @@ window.onload = function main() {
     return;
   }
   gl.activeTexture(gl.TEXTURE0); // Set a texture object to the texture unit
-  gl.bindTexture(gl.TEXTURE_2D, fbo.texImage);
+  gl.bindTexture(gl.TEXTURE_2D, fbo.texture);
 
   // Set the clear color and enable the depth test
   gl.clearColor(1, 1, 1, 1);
@@ -265,7 +265,7 @@ function initVertexBuffersForPlane(gl) {
 
   // Vertex coordinates
   var vertices = new Float32Array([
-    8, -7, 0,  -8, -7, 0,  -8, -7, -7,   8, -7, -7    // v0-v1-v2-v3
+    8, -7, 7,  -8, -7, 7,  -8, -7, -7,   8, -7, -7    // v0-v1-v2-v3
   ]);
 
   // Colors

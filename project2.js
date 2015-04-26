@@ -53,7 +53,6 @@ var FSHADER_SOURCE =
   'uniform sampler2D u_ShadowMap;\n' +
   'varying vec4 v_PositionFromLight;\n' +
   'varying vec4 v_Color;\n' +
-  'uniform sampler2D newTexture;\n' + 
   'void main() {\n' +
   '  vec3 shadowCoord = (v_PositionFromLight.xyz/v_PositionFromLight.w)/2.0 + 0.5;\n' +
   '  vec4 rgbaDepth = texture2D(u_ShadowMap, shadowCoord.xy);\n' +
@@ -63,7 +62,7 @@ var FSHADER_SOURCE =
   '}\n';
 
 var OFFSCREEN_WIDTH = 2048, OFFSCREEN_HEIGHT = 2048;
-var LIGHT_X = 0, LIGHT_Y = 5, LIGHT_Z = 0; // Position of the light source
+var LIGHT_X = 0, LIGHT_Y = 7, LIGHT_Z = .25; // Position of the light source
 
 window.onload = function main() {
   // Retrieve <canvas> element
@@ -125,7 +124,7 @@ window.onload = function main() {
   gl.clearColor(1, 1, 1, 1);
   gl.enable(gl.DEPTH_TEST);
 
-  var viewProjMatrixFromLight = new Matrix4(); // Prepare a view projection matrix for generating a shadow map
+ var viewProjMatrixFromLight = new Matrix4(); // Prepare a view projection matrix for generating a shadow map
   viewProjMatrixFromLight.setPerspective(70.0, OFFSCREEN_WIDTH/OFFSCREEN_HEIGHT, 1.0, 100.0);
   viewProjMatrixFromLight.lookAt(LIGHT_X, LIGHT_Y, LIGHT_Z, 0, 0, 0, 0.0, 1.0, 0.0);
 
@@ -164,21 +163,21 @@ window.onload = function main() {
 
     gl.useProgram(shadowProgram); // Set shaders for generating a shadow map
     // Draw the triangle and the plane (for generating a shadow map)
-    draw(gl, shadowProgram, triangle, viewProjMatrix);
+    drawTriangle(gl, shadowProgram, triangle, currentAngle, viewProjMatrixFromLight);
     mvpMatrixFromLight_t.set(g_mvpMatrix); // Used later
-	draw(gl, shadowProgram, square1, viewProjMatrix);
+	drawSquare(gl, shadowProgram, square1, currentAngle, viewProjMatrixFromLight);
     mvpMatrixFromLight_t.set(g_mvpMatrix); // Used later
-	draw(gl, shadowProgram, square2, viewProjMatrix);
+	drawSquareOtherX(gl, shadowProgram, square2, currentAngle, viewProjMatrixFromLight);
     mvpMatrixFromLight_t.set(g_mvpMatrix); // Used later
-	draw(gl, shadowProgram, square3, viewProjMatrix);
+	drawSquareY(gl, shadowProgram, square3, currentAngle, viewProjMatrixFromLight);
     mvpMatrixFromLight_t.set(g_mvpMatrix); // Used later
-	draw(gl, shadowProgram, square4, viewProjMatrix);
+	drawSquareOtherY(gl, shadowProgram, square4, currentAngle, viewProjMatrixFromLight);
     mvpMatrixFromLight_t.set(g_mvpMatrix); // Used later
 	draw(gl, shadowProgram, square5, viewProjMatrix);
     mvpMatrixFromLight_t.set(g_mvpMatrix); // Used later
 	draw(gl, shadowProgram, square6, viewProjMatrix);
     mvpMatrixFromLight_t.set(g_mvpMatrix); // Used later
-	draw(gl, shadowProgram, plane, viewProjMatrix);
+    draw(gl, shadowProgram, plane, viewProjMatrixFromLight);
     mvpMatrixFromLight_p.set(g_mvpMatrix); // Used later
 
     gl.bindFramebuffer(gl.FRAMEBUFFER, null);               // Change the drawing destination to color buffer
@@ -202,13 +201,55 @@ window.onload = function main() {
 	draw(gl, normalProgram, square5, viewProjMatrix);
 	gl.uniformMatrix4fv(normalProgram.u_MvpMatrixFromLight, false, mvpMatrixFromLight_t.elements);
 	draw(gl, normalProgram, square6, viewProjMatrix);
+	gl.uniformMatrix4fv(normalProgram.u_MvpMatrixFromLight, false, mvpMatrixFromLight_t.elements);
+	draw(gl, normalProgram, square5, viewProjMatrix);
+	gl.uniformMatrix4fv(normalProgram.u_MvpMatrixFromLight, false, mvpMatrixFromLight_t.elements);
+	draw(gl, normalProgram, square6, viewProjMatrix);
     gl.uniformMatrix4fv(normalProgram.u_MvpMatrixFromLight, false, mvpMatrixFromLight_p.elements);
 	draw(gl, normalProgram, plane, viewProjMatrix);
 	
     window.requestAnimationFrame(tick, canvas);
   };
-	tick();
+  tick(); 
 }
+
+function drawTriangle(gl, program, triangle, angle, viewProjMatrix) {
+  // Set rotate angle to model matrix and draw triangle
+  g_modelMatrix.setRotate(angle, 0, 1, 0);
+  draw(gl, program, triangle, viewProjMatrix);
+}
+
+function drawSquare(gl, program, square1, angle, viewProjMatrix) {
+  // Set rotate angle to model matrix and draw triangle
+  g_modelMatrix.setRotate(angle, 0, 1, 0);
+  draw(gl, program, square1, viewProjMatrix);
+}
+
+function drawSquareOtherX(gl, program, square1, angle, viewProjMatrix) {
+  // Set rotate angle to model matrix and draw triangle
+  g_modelMatrix.setRotate(angle, 0, 1, 0);
+  draw(gl, program, square1, viewProjMatrix);
+}
+
+function drawSquareY(gl, program, square3, angle, viewProjMatrix) {
+  // Set rotate angle to model matrix and draw triangle
+  g_modelMatrix.setRotate(angle, 0, 1, 0);
+  draw(gl, program, square3, viewProjMatrix);
+}
+
+function drawSquareOtherY(gl, program, square4, angle, viewProjMatrix) {
+  // Set rotate angle to model matrix and draw triangle
+  g_modelMatrix.setRotate(angle, 0, 1, 0);
+  draw(gl, program, square4, viewProjMatrix);
+}
+
+function drawPlane(gl, program, plane, viewProjMatrix) {
+  // Set rotate angle to model matrix and draw plane
+  g_modelMatrix.setRotate(-45, 0, 1, 1);
+  draw(gl, program, plane, viewProjMatrix);
+}
+
+
 function configureTexture( image ) {
     texture = gl.createTexture();
     gl.bindTexture( gl.TEXTURE_2D, texture );

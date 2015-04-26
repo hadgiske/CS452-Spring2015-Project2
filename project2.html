@@ -5,20 +5,19 @@
     <title>Shadow</title>
   </head>
 
-  <body onload="main()">
+  <body onload="main()" style="overflow: hidden">
     <canvas id="webgl" width="400" height="400">
       Please use a browser that supports "canvas"
     </canvas>
-    
-    <div id="display">
-	</div>
-
+    <div id="pause_screen" style="overflow: hidden; position:fixed; left:0; top:0; width: 1000px; height: 410px; background-color: #ffffff; display: none;"></div>
+    <div id="display"></div>
+	<button type="button" id="restart_button" style="display:none">New Game</button>
     <script src="lib/webgl-utils.js"></script>
     <script src="lib/webgl-debug.js"></script>
     <script src="lib/cuon-utils.js"></script>
     <script src="lib/cuon-matrix.js"></script>
     <script src="project2.js"></script>
     
-     <img id = "texImage" src="image.gif" hidden></img>
+     <img id = "texImage" src="isabelle.png" hidden></img>
   </body>
 </html>
